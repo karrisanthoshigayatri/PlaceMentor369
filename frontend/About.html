@@ -1,302 +1,620 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+  tailwind.config = {
+    darkMode: 'class'
+  }
+</script>
   <title>PlacementorAI</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
   <style>
     /* BASE */
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Inter, sans-serif; }
-    body { background: linear-gradient(to bottom right, #eef2ff, #ffffff, #eff6ff); color: #1f2937; }
-    .container { max-width: 1200px; margin: auto; padding: 0 20px; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, sans-serif;
+    }
+    body,
+header,
+section,
+footer,
+.container,
+.feature,
+.feature-wide,
+.stats-card,
+button,
+input,
+textarea,
+select,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+label {
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+    body {
+      background: linear-gradient(to bottom right, #eef2ff, #ffffff, #eff6ff);
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 20px;
+    }
 
     /* HEADER */
-    .header { background: #fff; padding: 16px 0; }
-    .nav { display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 22px; font-weight: 700; }
-    nav a { margin: 0 12px; text-decoration: none; color: #374151; font-weight: 500; }
-    .login { color: #4f46e5; }
-    .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500; }
-    .primary { background: #161533; color: #fff; }
-    .secondary { background: #e5e7eb; color: #374151; }
+    .header {
+      background: #fff;
+      padding: 16px 0;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    nav a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: #374151;
+      font-weight: 500;
+    }
+
+    .login {
+      color: #4f46e5;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .primary {
+      background: #161533;
+      color: #fff;
+    }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
 
     /* HERO */
-    .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; padding: 80px 0; align-items: center; }
-    .badge { display: inline-block; background: #e0e7ff; color: #4338ca; padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; font-weight: 500; }
-    .hero h1 { font-size: 42px; line-height: 1.2; margin-bottom: 20px; font-weight: 700; }
-    .hero p { font-size: 18px; color: #6b7280; line-height: 1.5; }
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      padding: 80px 0;
+      align-items: center;
+    }
 
-    .features { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; margin: 30px 0; }
-.feature {
-  display: flex;
-  gap: 12px;
-  background: #fff;
-  padding: 14px;
-  border-radius: 12px;
-  align-items: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+    .badge {
+      display: inline-block;
+      background: #e0e7ff;
+      color: #4338ca;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
 
-.feature:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-}    .feature h4 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
-    .feature p { font-size: 14px; color: #6b7280; }
+    .hero h1 {
+      font-size: 42px;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
 
-    .cta { display: flex; gap: 14px; margin-top: 20px; }
-    .cta button { flex: 1; text-align: center; }
+    .hero p {
+      font-size: 18px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 30px 0;
+    }
+
+    .feature {
+      display: flex;
+      gap: 12px;
+      background: #fff;
+      padding: 14px;
+      border-radius: 12px;
+      align-items: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .feature:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .feature h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .feature p {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .cta {
+      display: flex;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .cta button {
+      flex: 1;
+      text-align: center;
+    }
 
     /* HERO IMAGE */
-.hero-right {
-  position: relative;
-  top: -8px;
-}
+    .hero-right {
+      position: relative;
+      top: -8px;
+    }
 
-.hero-right img {
-  width: 100%;
-  height: auto;
-  max-height: 420px;
-  object-fit: cover;
-  display: block;
-  border-radius: 20px;
-}
-
-
-
-/* ADD THIS RIGHT HERE 👇 */
-.hero-img-wrapper {
-  position: relative;
-  border-radius: 20px;
-  overflow: hidden;
-}
-
-.hero-img-wrapper::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom right,
-    rgba(79,70,229,0.08),
-    rgba(255,255,255,0.02)
-  );
-}
+    .hero-right img {
+      width: 100%;
+      height: auto;
+      max-height: 420px;
+      object-fit: cover;
+      display: block;
+      border-radius: 20px;
+    }
 
 
 
-    .stats-card { position: absolute; bottom: -32px; left: -32px; background: #ffffff; padding: 16px 20px; border-radius: 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 12px 24px rgba(0,0,0,0.12); z-index: 10; }
-    .stats-card strong { font-size: 24px; font-weight: 700; color: #111827; }
-    .stats-card span { display: block; font-size: 14px; color: #6b7280; }
+    /* ADD THIS RIGHT HERE 👇 */
+    .hero-img-wrapper {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .hero-img-wrapper::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom right,
+          rgba(79, 70, 229, 0.08),
+          rgba(255, 255, 255, 0.02));
+    }
+
+
+
+    .stats-card {
+      position: absolute;
+      bottom: -32px;
+      left: -32px;
+      background: #ffffff;
+      padding: 16px 20px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+      z-index: 10;
+    }
+
+    .stats-card strong {
+      font-size: 24px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .stats-card span {
+      display: block;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
     .stats-card div {
-  text-align: center;
-}
+      text-align: center;
+    }
 
 
     /* FOOTER */
-    footer { background: #0f172a; color: #cbd5f5; padding: 50px 0; }
-    .footer-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 40px; }
-    footer a { display: block; color: #94a3b8; text-decoration: none; margin-top: 8px; }
-    .copyright { text-align: center; margin-top: 40px; font-size: 14px; color: #94a3b8; }
+    footer {
+      background: #0f172a;
+      color: #cbd5f5;
+      padding: 50px 0;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+    }
+
+    footer a {
+      display: block;
+      color: #94a3b8;
+      text-decoration: none;
+      margin-top: 8px;
+    }
+
+    .copyright {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 14px;
+      color: #94a3b8;
+    }
 
     /* MODAL */
-    .modal { position: fixed; inset: 0; display: none; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
-    .modal-box { background: #fff; padding: 30px; border-radius: 16px; width: 360px; }
-    .modal-box input { width: 100%; padding: 10px; margin: 10px 0; }
-    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      width: 360px;
+    }
+
+    .modal-box input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
 
     /* RESPONSIVE */
     @media (max-width: 1024px) {
-      .hero { grid-template-columns: 1fr; gap: 30px; text-align: center; }
-      .hero-left { order: 2; }
-      .hero-right { order: 1; }
-      .features { grid-template-columns: 1fr; }
-      .cta { flex-direction: column; }
-      .stats-card { left: 50%; transform: translateX(-50%); bottom: -24px; }
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+      }
+
+      .hero-left {
+        order: 2;
+      }
+
+      .hero-right {
+        order: 1;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .cta {
+        flex-direction: column;
+      }
+
+      .stats-card {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -24px;
+      }
     }
-     .btn i {
-  margin-left: 6px;
-  font-size: 14px;
-}
-footer h3,
-footer h4 {
-  color: #ffffff;
-}
-.feature-wide {
-  grid-column: span 2;        /* covers both columns */
-  background: #ffffff;
-  padding: 18px 22px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    .btn i {
+      margin-left: 6px;
+      font-size: 14px;
+    }
+
+    footer h3,
+    footer h4 {
+      color: #ffffff;
+    }
+
+    .feature-wide {
+      grid-column: span 2;
+      /* covers both columns */
+      background: #ffffff;
+      padding: 18px 22px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .feature-wide:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .feature-wide:hover .fa-arrow-right {
+      transform: translateX(4px);
+      transition: transform 0.2s ease;
+    }
+
+
+    .feature-wide--big {
+      width: calc(100% + 300px);
+      margin-left: -1px;
+    }
+
+    /* Make last wide box text same as normal feature boxes */
+    .feature-wide h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .feature-wide p {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .ai-icon {
+      color: #4c45ce;
+      /* same as primary button */
+      background: #eef2ff;
+      /* soft indigo bg */
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    /* DARK MODE */
+
+    /* DARK MODE */
+
+.dark body {
+  background: #0f172a !important;
+  color: #f8fafc !important;
 }
 
-.feature-wide:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
-}
-.feature-wide:hover .fa-arrow-right {
-  transform: translateX(4px);
-  transition: transform 0.2s ease;
+.dark .header {
+  background: #111827 !important;
 }
 
-
-.feature-wide--big {
-  width: calc(100% + 300px);
-  margin-left: -1px;
+.dark nav a,
+.dark .logo,
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6,
+.dark p,
+.dark span,
+.dark label,
+.dark li {
+  color: #f8fafc !important;
 }
 
-/* Make last wide box text same as normal feature boxes */
-.feature-wide h4 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 4px;
+.dark .feature,
+.dark .feature-wide,
+.dark .stats-card,
+.dark .modal-box {
+  background: #1e293b !important;
+  color: white !important;
 }
 
-.feature-wide p {
-  font-size: 14px;
-  color: #6b7280;
+.dark .secondary {
+  background: #334155 !important;
+  color: white !important;
 }
 
-.ai-icon {
-  color: #4c45ce;               /* same as primary button */
-  background: #eef2ff;          /* soft indigo bg */
-  padding: 8px;
-  border-radius: 8px;
-  font-size: 16px;
+.dark input,
+.dark textarea,
+.dark select {
+  background: #1e293b !important;
+  color: white !important;
+  border: 1px solid #334155 !important;
 }
 
+.dark footer {
+  background: #020617 !important;
+}
+
+.dark .badge {
+  background: #312e81 !important;
+  color: #c7d2fe !important;
+}
+
+.dark .hero p,
+.dark .feature p,
+.dark .feature-wide p {
+  color: #cbd5e1 !important;
+}
   </style>
 
 </head>
+
 <body>
 
-<!-- HEADER -->
-<header class="header">
-  <div class="container nav">
-    <div class="logo"><i class="fa-solid fa-arrow-up-right-dots"></i> <span>PlacementorAI</span></div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="contact.html">Contact</a>
-      <a href="register.html">Sign Up</a>
-      <a href="login.html" class="login">Login</a>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container nav">
+      <div class="logo"><i class="fa-solid fa-arrow-up-right-dots"></i> <span>PlacementorAI</span></div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="contact.html">Contact</a>
+        <a href="register.html">Sign Up</a>
+        <a href="login.html" class="login">Login</a>
+        <button
+  id="theme-toggle"
+  class="btn secondary theme-toggle-btn"
+  aria-label="Toggle dark mode"
+>
+  🌙
+</button>
 
-<a  href="register.html" class="btn primary">
-  Get Started
-  <i class="fa-solid fa-arrow-up-right-from-square"></i>
-</a>    </nav>
-  </div>
-</header>
+        <a href="register.html" class="btn primary">
+          Get Started
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </a>
+      </nav>
+    </div>
+  </header>
 
-<section id="about">
-  <div class="container">
-    <br/><br/>
+  <section id="about">
+    <div class="container">
+      <br /><br />
 
-    <h1>About PlacementorAI</h1>
+      <h1>About PlacementorAI</h1>
 
-    <p>
-      PlacementorAI is a smart and user-friendly placement management system 
-      designed to simplify campus recruitment for students, recruiters, and administrators.
-    </p>
+      <p>
+        PlacementorAI is a smart and user-friendly placement management system
+        designed to simplify campus recruitment for students, recruiters, and administrators.
+      </p>
 
-    <p>
-      The platform ensures a structured and transparent hiring process by clearly 
-      separating user roles and responsibilities. Students can explore job opportunities 
-      based on their eligibility, recruiters can manage applications efficiently, 
-      and admins maintain full control over the system.
-    </p>
-<br/><br/>
+      <p>
+        The platform ensures a structured and transparent hiring process by clearly
+        separating user roles and responsibilities. Students can explore job opportunities
+        based on their eligibility, recruiters can manage applications efficiently,
+        and admins maintain full control over the system.
+      </p>
+      <br /><br />
 
-    <h2>Our Mission</h2>
-    <p>
-      Our mission is to make the placement process simple, fair, and efficient 
-      for everyone involved, while providing AI-powered guidance to help students 
-      prepare better for their careers.
-    </p>
-<br/><br/>
+      <h2>Our Mission</h2>
+      <p>
+        Our mission is to make the placement process simple, fair, and efficient
+        for everyone involved, while providing AI-powered guidance to help students
+        prepare better for their careers.
+      </p>
+      <br /><br />
 
-    <h2>What Makes Us Unique?</h2>
-    <ul>
-      <li style="margin-left: 20px;"> Role-based system for better security and clarity</li>
-      <li style="margin-left: 20px;"> Only eligible and approved jobs are shown to students</li>
-      <li style="margin-left: 20px;"> Transparent application tracking</li>
-      <li style="margin-left: 20px;"> AI-powered career and interview guidance</li>
-      <li style="margin-left: 20px;"> Clean and easy-to-use interface</li>
-    </ul>
+      <h2>What Makes Us Unique?</h2>
+      <ul>
+        <li style="margin-left: 20px;"> Role-based system for better security and clarity</li>
+        <li style="margin-left: 20px;"> Only eligible and approved jobs are shown to students</li>
+        <li style="margin-left: 20px;"> Transparent application tracking</li>
+        <li style="margin-left: 20px;"> AI-powered career and interview guidance</li>
+        <li style="margin-left: 20px;"> Clean and easy-to-use interface</li>
+      </ul>
 
-<br/><br/>
+      <br /><br />
 
-    <h2>How It Works</h2>
-    <p>
-      Students create job applications, recruiters review and update application status, 
-      and admins supervise the overall process. This separation ensures there are no 
-      conflicts or unauthorized actions within the system.
-    </p>
-<br/><br/>
-    
-    <p>
-      We aim to continuously improve the platform and make placement management smarter 
-      with the help of technology.
-    </p>
-  </div>
-  <br/><br/>
-</section>
+      <h2>How It Works</h2>
+      <p>
+        Students create job applications, recruiters review and update application status,
+        and admins supervise the overall process. This separation ensures there are no
+        conflicts or unauthorized actions within the system.
+      </p>
+      <br /><br />
 
-
+      <p>
+        We aim to continuously improve the platform and make placement management smarter
+        with the help of technology.
+      </p>
+    </div>
+    <br /><br />
+  </section>
 
 
-<!-- FOOTER -->
-<footer>
-  <div class="container footer-grid">
-    <div><h3>PlacementorAI</h3><p>AI-powered placement readiness platform.</p></div>
-    <div><h4>Product</h4><a href="#">Features</a><a href="#">Career Paths</a><a href="#">Pricing</a></div>
-    <div><h4>Company</h4><a href="login.html">Login</a><a href="contact.html" >Contact</a><a href="About.html">About</a></div>
-    <div><h4>Social</h4><a href="https://www.linkedin.com/" target="_blank">LinkedIn</a><a href="https://x.com/?lang=en" target="_blank">Twitter</a><a href="https://github.com/" target="_blank">GitHub</a></div>
-  </div>
-  <p class="copyright">© 2026 PlacementorAI</p>
-</footer>
 
-<!-- LOGIN MODAL -->
-<div id="modal" class="modal">
-  <div class="modal-box">
-    <h2 id="modal-title">Login</h2>
-    <form onsubmit="login(event)">
-      <input type="email" placeholder="Email" required />
-      <input type="password" placeholder="Password" required />
-      <div class="modal-actions">
-        <button class="btn primary" type="submit">Login</button>
-        <button class="btn secondary" type="button" onclick="closeModal()">Cancel</button>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <h3>PlacementorAI</h3>
+        <p>AI-powered placement readiness platform.</p>
       </div>
-    </form>
+      <div>
+        <h4>Product</h4><a href="#">Features</a><a href="#">Career Paths</a><a href="#">Pricing</a>
+      </div>
+      <div>
+        <h4>Company</h4><a href="login.html">Login</a><a href="contact.html">Contact</a><a href="About.html">About</a>
+      </div>
+      <div>
+        <h4>Social</h4><a href="https://www.linkedin.com/" target="_blank">LinkedIn</a><a href="https://x.com/?lang=en"
+          target="_blank">Twitter</a><a href="https://github.com/" target="_blank">GitHub</a>
+      </div>
+    </div>
+    <p class="copyright">© 2026 PlacementorAI</p>
+  </footer>
+
+  <!-- LOGIN MODAL -->
+  <div id="modal" class="modal">
+    <div class="modal-box">
+      <h2 id="modal-title">Login</h2>
+      <form onsubmit="login(event)">
+        <input type="email" placeholder="Email" required />
+        <input type="password" placeholder="Password" required />
+        <div class="modal-actions">
+          <button class="btn primary" type="submit">Login</button>
+          <button
+  id="theme-toggle"
+  class="btn secondary"
+  aria-label="Toggle dark mode"
+>
+  🌙
+</button>
+      </form>
+    </div>
   </div>
-</div>
 
-<!-- SCRIPTS -->
-<script>
-  // Modal JS
-  const modal = document.getElementById("modal");
-  const title = document.getElementById("modal-title");
+  <!-- SCRIPTS -->
+  <script>
+    // Modal JS
+    const modal = document.getElementById("modal");
+    const title = document.getElementById("modal-title");
 
-  function openModal(type) {
-    title.innerText = type === "student" ? "Student Login" : "Recruiter Login";
-    modal.style.display = "flex";
-  }
+    function openModal(type) {
+      title.innerText = type === "student" ? "Student Login" : "Recruiter Login";
+      modal.style.display = "flex";
+    }
 
-  function closeModal() { modal.style.display = "none"; }
+    function closeModal() { modal.style.display = "none"; }
 
-  function login(e) {
-    e.preventDefault();
-    alert("Login successful (demo)");
-    closeModal();
-  }
-</script>
-<script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
-<script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
-
-<!-- Botpress Chatbot Scripts -->
+    function login(e) {
+      e.preventDefault();
+      alert("Login successful (demo)");
+      closeModal();
+    }
+  </script>
+  <script src="https://cdn.botpress.cloud/webchat/v3.5/inject.js"></script>
+  <script src="https://files.bpcontent.cloud/2026/01/29/16/20260129163015-0ZV4O3BK.js" defer></script>
+  <script src="js/theme.js"></script>
+  <!-- Botpress Chatbot Scripts -->
 
 </body>
+
 </html>
