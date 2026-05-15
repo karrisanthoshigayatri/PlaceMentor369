@@ -25,15 +25,15 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
 
 <body class="bg-slate-50 dark:bg-gray-900 min-h-screen flex flex-col transition-colors">
 
-<header class="bg-white dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700">
+<header class="bg-white dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700" role="banner">
   <div class="max-w-7xl mx-auto px-6 py-4 flex justify-center">
-    <a href="/" class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+    <a href="/" class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent" aria-label="PlacementorAI Home">
       PlacementorAI
     </a>
   </div>
 </header>
 
-<main class="flex-1 flex items-center justify-center px-6 py-12">
+<main class="flex-1 flex items-center justify-center px-6 py-12" role="main" aria-label="Registration page">
   <div id="register-card" class="w-full max-w-md opacity-0 translate-y-6 transition-all duration-500">
 
     <div class="text-center mb-6">
@@ -45,8 +45,8 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
       <form id="registerForm" class="space-y-4 needs-validation" novalidate>
         <!-- Full Name -->
         <div>
-          <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Full Name</label>
-          <input id="name" type="text" required placeholder="Nilesh Bagade"
+          <label for="name" class="text-sm font-medium text-gray-700 dark:text-gray-200">Full Name</label>
+          <input id="name" type="text" required placeholder="Nilesh Bagade" aria-label="Full name" autocomplete="name"
             class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
           <div class="invalid-feedback">
             Full name is required.
@@ -58,8 +58,8 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
 
         <!-- Email -->
         <div>
-          <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
-          <input id="email" type="email" required placeholder="nilesh345@gmail.com"
+          <label for="email" class="text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
+          <input id="email" type="email" required placeholder="nilesh345@gmail.com" aria-label="Email address" autocomplete="email"
             class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
           <div class="invalid-feedback">
             Please enter a valid email address.
@@ -67,13 +67,12 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
           <div class="valid-feedback">
             Valid email.
           </div>
-          <!-- <p id="emailError" class="text-red-500 text-sm hidden mt-1">Please enter a valid email.</p> -->
         </div>
 
         <!-- Password -->
         <div class="relative">
-          <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
-          <input id="password" type="password" required placeholder="••••••••"
+          <label for="password" class="text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
+          <input id="password" type="password" required placeholder="••••••••" aria-label="Password" autocomplete="new-password"
             class="mt-1 w-full px-4 py-3 pr-12 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none form-control">
           <div class="invalid-feedback">
             Password must be at least 8 characters.
@@ -81,16 +80,15 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
           <div class="valid-feedback">
             Strong password.
           </div>
-          <button type="button" id="togglePassword" class="absolute right-4 top-[38px] text-gray-400 hover:text-indigo-600">
+          <button type="button" id="togglePassword" aria-label="Toggle password visibility" class="absolute right-4 top-[38px] text-gray-400 hover:text-indigo-600">
             <i data-lucide="eye" id="eyeIcon"></i>
           </button>
-          <!-- <p id="passwordError" class="text-red-500 text-sm hidden mt-1">Password must be at least 8 characters.</p> -->
         </div>
 
         <!-- Role -->
         <div>
-          <label class="text-sm font-medium text-gray-700 dark:text-gray-200">Role</label>
-          <select id="role" required
+          <label for="role" class="text-sm font-medium text-gray-700 dark:text-gray-200">Role</label>
+          <select id="role" required aria-label="Select your role"
             class="mt-1 w-full px-4 py-3 rounded-xl border dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer form-select">
             <option value="" disabled selected>Choose your role</option>
             <option value="student">Student</option>
@@ -106,7 +104,7 @@ connect-src 'self' http://localhost:5000 https://unpkg.com;
         </div>
 
         <!-- Submit -->
-        <button type="submit" id="submitBtn"
+        <button type="submit" id="submitBtn" aria-label="Create your account"
           class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 rounded-xl flex justify-center items-center gap-2 transition active:scale-95 disabled:opacity-50">
           <i data-lucide="user-plus"></i>
           <span id="btnText">Create Account</span>
