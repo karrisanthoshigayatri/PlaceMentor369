@@ -41,15 +41,44 @@ export const analyzeResume = async (resumeText) => {
         response = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
           contents: prompt,
+          config: {
+            responseMimeType: 'application/json'
+          }
         });
-        break; // Success, break the retry loop
+        break; // Success!
       } catch (err) {
-        console.warn(`⚠️ Gemini API Attempt ${i + 1} failed:`, err.message || err);
-        if (i === retries - 1) {
-          throw err; // Re-throw the error if it was the final attempt
+        const errMsg = err.message || String(err);
+        console.warn(`⚠️ Gemini API Attempt ${i + 1} failed: ${errMsg}`);
+        
+        let sleepDuration = delay * Math.pow(2, i);
+        
+        // Intelligent Quota Recovery: parse Google's exact retryDelay if provided
+        try {
+          const jsonStart = errMsg.indexOf("{");
+          if (jsonStart !== -1) {
+            const errorDetails = JSON.parse(errMsg.slice(jsonStart));
+            if (errorDetails?.error?.details) {
+              const retryInfo = errorDetails.error.details.find(d => 
+                d["@type"] && d["@type"].includes("RetryInfo")
+              );
+              if (retryInfo?.retryDelay) {
+                const match = retryInfo.retryDelay.match(/([\d\.]+)/);
+                if (match) {
+                  const parsedDelay = Math.ceil(parseFloat(match[1]) * 1000) + 1500; // Add 1.5s safety buffer
+                  console.log(`[Gemini API] Quota hit. Sleeping for ${parsedDelay / 1000}s to let limits clear...`);
+                  sleepDuration = parsedDelay;
+                }
+              }
+            }
+          }
+        } catch (e) {
+          // ignore parsing failures
         }
-        // Wait with exponential backoff before next attempt
-        await new Promise(res => setTimeout(res, delay * (i + 1)));
+
+        if (i === retries - 1) {
+          throw err;
+        }
+        await new Promise(resolve => setTimeout(resolve, sleepDuration));
       }
     }
     
