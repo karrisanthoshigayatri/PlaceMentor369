@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 import Student from "../models/student.js";
 import Job from "../models/job.js";
 import Application from "../models/application.js"; // make sure file name matches exactly
-import pdfParse from "pdf-parse";
 import { analyzeResume } from "../utils/gemini.js";
+import { PDFParse } from "pdf-parse";
 
 /* ============================
    GET STUDENT PROFILE
@@ -117,7 +117,7 @@ export const applyJob = async (req, res) => {
 export const getApplications = async (req, res) => {
   try {
     const studentProfile = await Student.findOne({ user: req.user.id });
-    if (!studentProfile) return res.status(400).json({ message: "Profile not found" });
+    if (!studentProfile) return res.status(200).json([]);
 
     const apps = await Application.find({ student: studentProfile._id }).populate({
       path: "job",
@@ -160,8 +160,9 @@ export const uploadResume = async (req, res) => {
     }
 
     // 1. Extract text from PDF
-    const pdfData = await pdfParse(req.file.buffer);
-    const resumeText = pdfData.text;
+    const parser = new PDFParse({ data: req.file.buffer });
+    const result = await parser.getText();
+    const resumeText = result.text;
 
     // 2. Call Gemini AI
     const aiResult = await analyzeResume(resumeText);
