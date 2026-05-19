@@ -177,6 +177,7 @@ export const uploadResume = async (req, res) => {
     if (aiResult.name) student.name = aiResult.name;
     if (aiResult.college) student.college = aiResult.college;
     if (aiResult.branch) student.branch = aiResult.branch;
+    if (aiResult.cgpa !== undefined && aiResult.cgpa !== null) student.cgpa = aiResult.cgpa;
     
     // Merge skills (unique)
     if (aiResult.skills && aiResult.skills.length > 0) {
