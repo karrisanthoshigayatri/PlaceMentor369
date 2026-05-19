@@ -116,6 +116,14 @@ resumeInput?.addEventListener("change", async (e) => {
 
     const dropArea = document.getElementById("resumeDropArea");
     
+    // Clear previous details immediately to provide instant visual feedback
+    fullNameInput.value = "";
+    rollInput.value = "";
+    cgpaInput.value = "";
+    branchSelect.value = "";
+    skills = [];
+    renderSkills(); // This automatically resets progress bar to baseline
+    
     // Show AI parsing loading state via a non-destructive absolute overlay
     const loadingOverlay = document.createElement("div");
     loadingOverlay.id = "resumeLoadingOverlay";
@@ -146,14 +154,6 @@ resumeInput?.addEventListener("change", async (e) => {
 
         const data = await res.json();
         const profile = data.student;
-
-        // Clear previous details first to prevent leftovers
-        fullNameInput.value = "";
-        rollInput.value = "";
-        cgpaInput.value = "";
-        branchSelect.value = "";
-        skills = [];
-        renderSkills();
 
         // Auto-fill forms based on AI extraction
         if (profile.name) fullNameInput.value = profile.name;
