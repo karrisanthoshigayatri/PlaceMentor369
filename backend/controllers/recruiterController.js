@@ -22,6 +22,7 @@ export const createJob = async (req, res) => {
       description,
       cgpa,
       branch,
+      branches,
       skillsRequired,
       deadline,
     } = req.body;
@@ -35,7 +36,7 @@ export const createJob = async (req, res) => {
       company,
       description,
       cgpa,
-      branch,
+      branch: branch || branches || [],
       skillsRequired,
       deadline: new Date(deadline),
       recruiter: recruiterId,
