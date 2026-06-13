@@ -48,8 +48,8 @@ app.use("/api/admin", adminRoutes);
 import globalErrorHandler from "./middlewares/errorMiddleware.js";
 import AppError from "./utils/AppError.js";
 
-// Handle unhandled routes
-app.all('*', (req, res, next) => {
+// Handle unhandled routes (Express 5 requires named wildcards; app.use catches all unmatched routes)
+app.use((req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
