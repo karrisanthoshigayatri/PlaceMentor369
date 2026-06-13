@@ -238,6 +238,11 @@ window.selectJob = function(id) {
             ${isApplied ? "disabled" : ""}>
             ${isApplied ? "Application Sent" : "Apply Now"}
           </button>
+          <a
+            href="../student/skill-gap.html?jobId=${job.id}"
+            class="flex items-center justify-center gap-2 px-10 py-3 rounded-xl font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition-all text-sm">
+            📊 Skill Gap Analysis
+          </a>
           ${!eligibility.eligible && !isApplied ? `
           <p class="text-sm text-rose-600 bg-rose-50 border border-rose-100 rounded-xl p-3 mt-2">
             You may not meet all job requirements.
