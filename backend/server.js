@@ -10,7 +10,7 @@ import authRoutes from "./routes/authRoutes.js";
 import recruiterRoutes from "./routes/recruiterRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 
-dotenv.config();
+dotenv.config({ override: true });
 if (!process.env.MONGO_URI || !process.env.JWT_SECRET) {
   console.error("FATAL ERROR: MONGO_URI and JWT_SECRET environment variables are required.");
   process.exit(1);
