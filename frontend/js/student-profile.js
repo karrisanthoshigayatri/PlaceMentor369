@@ -1,8 +1,6 @@
 // ============================
 // CONSTANTS & SESSION
 // ============================
-const API_BASE = "http://localhost:5000/api/student";
-;
 const SESSION_KEY = "placementor_session";
 
 function getSession() {
@@ -20,6 +18,40 @@ if (!session) {
 }
 
 const { token, user } = session;
+
+// ============================
+// SOCKET.IO CONNECTION (Phase 4)
+// ============================
+let socket = null;
+let isSocketConnected = false;
+
+if (window.io && user && user.id) {
+    socket = io("http://localhost:5000");
+
+    socket.on("connect", () => {
+        console.log("🔌 Connected to Socket.io server successfully.");
+        isSocketConnected = true;
+        socket.emit("register", user.id);
+    });
+
+    socket.on("disconnect", () => {
+        console.log("🔌 Disconnected from Socket.io server.");
+        isSocketConnected = false;
+    });
+
+    socket.on("ai-completed", async (data) => {
+        console.log("🚀 Live Event received: 'ai-completed':", data);
+        
+        document.getElementById("resumeLoadingOverlay")?.remove();
+        isProcessingResume = false;
+        if (saveBtn) saveBtn.disabled = false;
+        const resetBtn = document.getElementById("resetProfileBtn");
+        if (resetBtn) resetBtn.disabled = false;
+
+        showToast("🎯 Real-time Sync: " + (data.message || "AI Analysis Complete!"), "success");
+        await loadProfile();
+    });
+}
 
 // ============================
 // PROFILE ELEMENTS
@@ -180,11 +212,7 @@ removeResumeBtn?.addEventListener("click", () => {
 // ============================
 async function loadProfile() {
     try {
-        const res = await fetch(`${API_BASE}/profile`, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        if (!res.ok) throw new Error("Failed to fetch profile");
-        const profile = await res.json();
+        const profile = await apiRequest("/student/profile", "GET");
 
         const nameParts = (profile.name || "").trim().split(/\s+/);
         firstNameInput.value = nameParts[0] || "";
@@ -228,16 +256,7 @@ saveBtn?.addEventListener("click", async () => {
         saveBtn.innerText = "Saving...";
         saveBtn.disabled = true;
 
-        const res = await fetch(`${API_BASE}/profile`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) throw new Error("Save failed");
+        await apiRequest("/student/profile", "PATCH", payload);
 
         showToast("✅ Profile saved successfully!", "success");
     } catch (err) {

@@ -21,7 +21,7 @@ const submitBtn = document.getElementById("submitBtn");
 const btnText = document.getElementById("btnText");
 const passwordInput = document.getElementById("password");
 const togglePasswordBtn = document.getElementById("togglePassword");
-const passwordErrorEl = document.getElementById("passwordError");
+const eyeIcon = document.getElementById("eyeIcon");
 
 // -------------------------
 // Password Toggle
@@ -29,10 +29,7 @@ const passwordErrorEl = document.getElementById("passwordError");
 togglePasswordBtn.addEventListener("click", () => {
   const isPassword = passwordInput.type === "password";
   passwordInput.type = isPassword ? "text" : "password";
-  const eyeIcon = togglePasswordBtn.querySelector("[data-lucide]");
-  if (eyeIcon) {
-    eyeIcon.setAttribute("data-lucide", isPassword ? "eye-off" : "eye");
-  }
+  eyeIcon.setAttribute("data-lucide", isPassword ? "eye-off" : "eye");
   lucide.createIcons();
 });
 
@@ -44,54 +41,35 @@ registerForm.onsubmit = async (e) => {
 
   const fullName = document.getElementById("name").value;
   const email = document.getElementById("email").value;
-  const role = document.getElementById("role").value.toLowerCase(); // lowercase for consistency
+  const role = document.getElementById("role").value.toLowerCase();
   const password = passwordInput.value;
 
-  // 1️⃣ Validation Logic
-  if (passwordErrorEl) passwordErrorEl.classList.add("hidden");
   if (password.length < 8) {
-    if (passwordErrorEl) passwordErrorEl.classList.remove("hidden");
+    alert("Password must be at least 8 characters.");
     return;
   }
 
-  // 2️⃣ Visual Feedback
   submitBtn.disabled = true;
   btnText.innerText = "Creating Account...";
 
   try {
-    // 3️⃣ Backend API call
-    const res = await fetch("http://localhost:5000/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: fullName, email, password, role })
-    });
+    const data = await apiRequest("/auth/register", "POST", { name: fullName, email, password, role });
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      showToast(data.message || "Registration failed", "error");
-      submitBtn.disabled = false;
-      btnText.innerText = "Create Account";
-      return;
-    }
-
-    // 4️⃣ Save session in localStorage
     localStorage.setItem(
       "placementor_session",
       JSON.stringify({ token: data.token, user: data.user })
     );
 
-    // 5️⃣ Redirect based on role
     if (data.user.role === "admin") {
-      window.location.href = "admin/admin-dashboard.html";
+      window.location.href = "/frontend/admin/admin-dashboard.html";
     } else if (data.user.role === "recruiter") {
-      window.location.href = "recruiter/recruiter-dashboard.html";
+      window.location.href = "/frontend/recruiter/recruiter-dashboard.html";
     } else {
-      window.location.href = "student/student-dashboard.html";
+      window.location.href = "/frontend/student/student-dashboard.html";
     }
 
   } catch (err) {
-    showToast("Server error. Try again later.", "error");
+    alert(err.message || "Server error. Try again later.");
     console.error("Registration Error:", err);
     submitBtn.disabled = false;
     btnText.innerText = "Create Account";
