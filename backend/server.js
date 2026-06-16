@@ -1,4 +1,5 @@
 // backend/server.js
+
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
@@ -10,120 +11,127 @@ import authRoutes from "./routes/authRoutes.js";
 import recruiterRoutes from "./routes/recruiterRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 
+// Error Handling
+import globalErrorHandler from "./middlewares/errorMiddleware.js";
+import AppError from "./utils/AppError.js";
+
 dotenv.config();
+
 const app = express();
 
 /* ============================
    GLOBAL MIDDLEWARE
 ============================ */
 
-// ✅ CORS (allow frontend URLs)
+// CORS
 app.use(
   cors({
-    origin: true, // dynamically allow any frontend port
-    credentials: true
+    origin: true,
+    credentials: true,
   })
 );
 
-// ✅ Body parsers
+// Body Parser
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 
 /* ============================
-   ROUTES
+   HEALTH CHECK
 ============================ */
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "🚀 PlacementorAI Backend Running!",
+  });
+});
 
-// Health check
-app.get("/", (req, res) => res.status(200).send("🚀 PlacementorAI Backend Running!"));
-
-// Auth routes
+/* ============================
+   API ROUTES
+============================ */
 app.use("/api/auth", authRoutes);
-
-// Student routes
 app.use("/api/student", studentRoutes);
 app.use("/api/recruiter", recruiterRoutes);
 app.use("/api/admin", adminRoutes);
 
-// Custom Global Error Handler
-import globalErrorHandler from "./middlewares/errorMiddleware.js";
-import AppError from "./utils/AppError.js";
-
-// Handle unhandled routes (Express 5 requires named wildcards; app.use catches all unmatched routes)
-app.use((req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+/* ============================
+   404 HANDLER
+============================ */
+app.all("*", (req, res, next) => {
+  next(
+    new AppError(
+      `Can't find ${req.originalUrl} on this server!`,
+      404
+    )
+  );
 });
 
-// Register Global Error Handling Middleware
+/* ============================
+   GLOBAL ERROR HANDLER
+============================ */
 app.use(globalErrorHandler);
 
 /* ============================
-   PROCESS & SHUTDOWN HANDLING
-============================ */
-let shuttingDown = false;
-let server;
-
-const gracefulShutdown = async (err = null) => {
-  if (shuttingDown) return;
-  shuttingDown = true;
-  console.log('🛑 SIGTERM/SIGINT or Fatal Error received. Shutting down gracefully...');
-  
-  if (err) {
-    console.error('💥 Fatal Error:', err);
-  }
-
-  if (server) {
-    server.close(async () => {
-      console.log('✅ HTTP server closed.');
-      try {
-        await mongoose.connection.close(false);
-        console.log('✅ MongoDB connection closed.');
-        process.exit(err ? 1 : 0);
-      } catch (dbErr) {
-        console.error('❌ Error closing MongoDB connection:', dbErr);
-        process.exit(1);
-      }
-    });
-  } else {
-    try {
-      await mongoose.connection.close(false);
-      process.exit(err ? 1 : 0);
-    } catch (dbErr) {
-      process.exit(1);
-    }
-  }
-
-  setTimeout(() => {
-    console.error('⚠️ Force shutting down...');
-    process.exit(1);
-  }, 10000);
-};
-
-process.on('SIGTERM', () => gracefulShutdown());
-process.on('SIGINT', () => gracefulShutdown());
-
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('💥 UNHANDLED REJECTION! Shutting down...');
-  console.error(reason);
-  gracefulShutdown(reason);
-});
-
-process.on('uncaughtException', (err) => {
-  console.error('💥 UNCAUGHT EXCEPTION! Shutting down...');
-  console.error(err.name, err.message, err.stack);
-  gracefulShutdown(err);
-});
-
-/* ============================
-   MONGODB + SERVER START
+   DATABASE CONNECTION
 ============================ */
 const PORT = process.env.PORT || 5000;
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("✅ MongoDB Connected successfully");
-    server = app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
-  })
-  .catch((err) => {
-    console.error("❌ MongoDB connection failed:", err.message);
-  });
+let server;
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+
+    console.log("✅ MongoDB Connected Successfully");
+
+    server = app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ MongoDB Connection Failed:", error.message);
+    process.exit(1);
+  }
+};
+
+/* ============================
+   GRACEFUL SHUTDOWN
+============================ */
+const gracefulShutdown = async (signal) => {
+  console.log(`\n🛑 ${signal} received. Shutting down...`);
+
+  try {
+    if (server) {
+      server.close(() => {
+        console.log("✅ HTTP Server Closed");
+      });
+    }
+
+    await mongoose.connection.close();
+    console.log("✅ MongoDB Connection Closed");
+
+    process.exit(0);
+  } catch (error) {
+    console.error("❌ Shutdown Error:", error);
+    process.exit(1);
+  }
+};
+
+process.on("SIGINT", () => gracefulShutdown("SIGINT"));
+process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
+
+/* ============================
+   UNHANDLED ERRORS
+============================ */
+process.on("unhandledRejection", (err) => {
+  console.error("💥 UNHANDLED REJECTION:", err);
+  gracefulShutdown("UNHANDLED_REJECTION");
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("💥 UNCAUGHT EXCEPTION:", err);
+  process.exit(1);
+});
+
+/* ============================
+   START SERVER
+============================ */
+connectDB();
