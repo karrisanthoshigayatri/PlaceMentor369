@@ -5,7 +5,8 @@ import {
   saveProfile,
   getJobs,
   applyJob,
-  getApplications
+  getApplications,
+  getSkillGapAnalysis
 } from "../controllers/studentController.js";
 
 const router = express.Router();
@@ -20,10 +21,12 @@ router.patch("/profile", verifyToken, saveProfile);
 router.get("/jobs", verifyToken, getJobs);
 
 // Apply for a job
-// backend/routes/studentRoutes.js
 router.post("/apply/:jobId", verifyToken, applyJob);
 
 // Get all applications of this student
 router.get("/applications", verifyToken, getApplications);
+
+// AI-powered skill gap analysis for a specific job
+router.get("/skill-gap/:jobId", verifyToken, getSkillGapAnalysis);
 
 export default router;
