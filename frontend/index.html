@@ -202,6 +202,379 @@ footer h4 {
   font-size: 16px;
 }
 
+body.dark-mode .ai-left p{
+    color:#cbd5e1;
+}
+
+body.dark-mode .ai-left h2{
+    color:white;
+}
+
+/* ---------- Section wrapper ---------- */
+.journey-section {
+  padding: 90px 0 60px;
+  position: relative;
+}
+
+/* ---------- Header ---------- */
+.journey-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.journey-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #e0e7ff;
+  color: #4338ca;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.journey-header h2 {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #111827;
+  margin-bottom: 12px;
+}
+
+.journey-accent {
+  color: #4f46e5;
+}
+
+.journey-header p {
+  font-size: 17px;
+  color: #6b7280;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ---------- Timeline ---------- */
+.journey-timeline {
+  position: relative;
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Vertical centre line */
+.journey-timeline::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(to bottom, #e0e7ff, #c7d2fe, #e0e7ff);
+}
+
+/* ---------- Each row ---------- */
+.journey-item {
+  display: grid;
+  grid-template-columns: 1fr 48px 1fr;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+
+/* Spacer keeps card on correct side */
+.journey-spacer {
+  /* empty — just takes up grid space */
+}
+
+/* ---------- Node (circle on spine) ---------- */
+.journey-node {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #c7d2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  color: #4f46e5;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+  z-index: 2;
+  flex-shrink: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.journey-item:hover .journey-node,
+.journey-item:focus-within .journey-node {
+  transform: scale(1.15);
+  border-color: #4f46e5;
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.25);
+}
+
+.journey-node--final {
+  background: #4f46e5;
+  border-color: #4f46e5;
+  color: #fff;
+}
+
+/* ---------- Card ---------- */
+.journey-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 22px 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  cursor: default;
+  outline: none;
+}
+
+.journey-item--left .journey-card {
+  margin-right: 24px;
+  text-align: right;
+}
+
+.journey-item--right .journey-card {
+  margin-left: 24px;
+  text-align: left;
+}
+
+.journey-card:hover,
+.journey-item:focus-within .journey-card {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.1);
+  border-color: #c7d2fe;
+}
+
+.journey-card--final {
+  border-color: #c7d2fe;
+  background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+}
+
+/* Step tag */
+.journey-step-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #6366f1;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  opacity: 0.75;
+}
+
+/* Card header: icon + title */
+.journey-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.journey-item--left .journey-card-header {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+
+.journey-item--right .journey-card-header {
+  flex-direction: row;
+}
+
+.journey-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #e0e7ff;
+  color: #4f46e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.journey-card:hover .journey-icon,
+.journey-item:focus-within .journey-icon {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.journey-icon--final {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.journey-card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.3;
+}
+
+.journey-card p {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.65;
+}
+
+/* ---------- End marker ---------- */
+.journey-end {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+  background: #e0e7ff;
+  color: #4338ca;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 24px;
+  border-radius: 999px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------- Scroll reveal animation ---------- */
+.journey-reveal {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.journey-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Dark mode ---------- */
+body.dark-mode .journey-header h2 {
+  color: #f8fafc;
+}
+
+body.dark-mode .journey-header p {
+  color: #94a3b8;
+}
+
+body.dark-mode .journey-badge {
+  background: #312e81;
+  color: #a5b4fc;
+}
+
+body.dark-mode .journey-timeline::before {
+  background: linear-gradient(to bottom, #1e293b, #334155, #1e293b);
+}
+
+body.dark-mode .journey-node {
+  background: #1e293b;
+  border-color: #4f46e5;
+  color: #a5b4fc;
+}
+
+body.dark-mode .journey-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+body.dark-mode .journey-card h3 {
+  color: #f8fafc;
+}
+
+body.dark-mode .journey-card p {
+  color: #94a3b8;
+}
+
+body.dark-mode .journey-card--final {
+  background: #1e1b4b;
+  border-color: #4f46e5;
+}
+
+body.dark-mode .journey-icon {
+  background: #312e81;
+  color: #a5b4fc;
+}
+
+body.dark-mode .journey-card:hover .journey-icon,
+body.dark-mode .journey-item:focus-within .journey-icon {
+  background: #4f46e5;
+  color: #fff;
+}
+
+body.dark-mode .journey-end {
+  background: #1e1b4b;
+  color: #a5b4fc;
+}
+
+/* ---------- Responsive: tablet ---------- */
+@media (max-width: 768px) {
+  .journey-header h2 {
+    font-size: 28px;
+  }
+
+  .journey-timeline {
+    gap: 24px;
+  }
+
+  /* Switch to single column on mobile */
+  .journey-timeline::before {
+    left: 24px;
+  }
+
+  .journey-item {
+    grid-template-columns: 48px 1fr;
+    grid-template-rows: auto;
+  }
+
+  /* Hide the spacer column on mobile */
+  .journey-spacer {
+    display: none;
+  }
+
+  /* Both left and right cards go to the right of the spine */
+  .journey-item--left,
+  .journey-item--right {
+    grid-template-columns: 48px 1fr;
+  }
+
+  /* Node always first column */
+  .journey-item--left .journey-node,
+  .journey-item--right .journey-node {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  /* Card always second column */
+  .journey-item--left .journey-card,
+  .journey-item--right .journey-card {
+    grid-column: 2;
+    grid-row: 1;
+    margin-left: 16px;
+    margin-right: 0;
+    text-align: left;
+  }
+
+  /* Fix card header direction on mobile */
+  .journey-item--left .journey-card-header {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .journey-section {
+    padding: 60px 0 40px;
+  }
+
+  .journey-card {
+    padding: 16px 18px;
+  }
+}
   </style>
 </head>
 <body>
@@ -256,6 +629,253 @@ footer h4 {
  </div>
     
   </div>
+  
+</section>
+<div class="success">
+    <a href="success-metrics.html">
+        <h3>Success Metrics</h3>
+    </a>
+</div>
+<section class="resume-builder-section">
+  <div class="container">
+
+    <div class="resume-content">
+      <div class="resume-left">
+
+        <span class="resume-badge">
+          <i class="fa-solid fa-file-lines"></i>
+          Placement Ready
+        </span>
+        <!-- ============================================================
+     PLACEMENT JOURNEY SECTION
+     Paste this block in index.html AFTER the <div class="success">
+     block and BEFORE the <section class="resume-builder-section">
+     ============================================================ -->
+
+<section class="journey-section" id="placement-journey" aria-label="Placement Journey">
+  <div class="container">
+
+    <div class="journey-header">
+      <span class="journey-badge">
+        <i class="fa-solid fa-route"></i>
+        Your Journey
+      </span>
+      <h2>From Student to <span class="journey-accent">Placed Professional</span></h2>
+      <p>Eight steps. One intelligent platform. A career outcome you can measure in real time.</p>
+    </div>
+
+    <div class="journey-timeline" role="list">
+
+      <!-- Step 1 -->
+      <div class="journey-item journey-item--left journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-card">
+          <span class="journey-step-tag">Step 01</span>
+          <div class="journey-card-header">
+            <div class="journey-icon" aria-hidden="true">
+              <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <h3>Create Profile</h3>
+          </div>
+          <p>Set up your student profile with academic background, target roles, and career goals. Your personalised AI journey begins here.</p>
+        </div>
+        <div class="journey-node" aria-hidden="true">
+          <span>1</span>
+        </div>
+        <div class="journey-spacer"></div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="journey-item journey-item--right journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-spacer"></div>
+        <div class="journey-node" aria-hidden="true">
+          <span>2</span>
+        </div>
+        <div class="journey-card">
+          <span class="journey-step-tag">Step 02</span>
+          <div class="journey-card-header">
+            <div class="journey-icon" aria-hidden="true">
+              <i class="fa-solid fa-file-arrow-up"></i>
+            </div>
+            <h3>Upload Resume</h3>
+          </div>
+          <p>Drop in your resume and let our parser extract your skills, projects, and experience — instantly structured for AI analysis.</p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="journey-item journey-item--left journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-card">
+          <span class="journey-step-tag">Step 03</span>
+          <div class="journey-card-header">
+            <div class="journey-icon" aria-hidden="true">
+              <i class="fa-solid fa-magnifying-glass-chart"></i>
+            </div>
+            <h3>Resume Analysis</h3>
+          </div>
+          <p>Our AI engine deep-reads your resume — scoring clarity, ATS compatibility, and keyword density against thousands of job descriptions.</p>
+        </div>
+        <div class="journey-node" aria-hidden="true">
+          <span>3</span>
+        </div>
+        <div class="journey-spacer"></div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="journey-item journey-item--right journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-spacer"></div>
+        <div class="journey-node" aria-hidden="true">
+          <span>4</span>
+        </div>
+        <div class="journey-card">
+          <span class="journey-step-tag">Step 04</span>
+          <div class="journey-card-header">
+            <div class="journey-icon" aria-hidden="true">
+              <i class="fa-solid fa-layer-group"></i>
+            </div>
+            <h3>Skill Gap Identification</h3>
+          </div>
+          <p>Pinpoint exactly which skills you're missing for your target roles. No guesswork — just precise, data-backed gap mapping.</p>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="journey-item journey-item--left journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-card">
+          <span class="journey-step-tag">Step 05</span>
+          <div class="journey-card-header">
+            <div class="journey-icon" aria-hidden="true">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <h3>AI-Based Recommendations</h3>
+          </div>
+          <p>Get a tailored learning roadmap — curated courses, projects, and resources that close your gaps and align with recruiter expectations.</p>
+        </div>
+        <div class="journey-node" aria-hidden="true">
+          <span>5</span>
+        </div>
+        <div class="journey-spacer"></div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="journey-item journey-item--right journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-spacer"></div>
+        <div class="journey-node" aria-hidden="true">
+          <span>6</span>
+        </div>
+        <div class="journey-card">
+          <span class="journey-step-tag">Step 06</span>
+          <div class="journey-card-header">
+            <div class="journey-icon" aria-hidden="true">
+              <i class="fa-solid fa-comments"></i>
+            </div>
+            <h3>Mock Interviews</h3>
+          </div>
+          <p>Practice with AI interviewers trained on real company formats. Get instant feedback on answers, tone, and technical depth.</p>
+        </div>
+      </div>
+
+      <!-- Step 7 -->
+      <div class="journey-item journey-item--left journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-card">
+          <span class="journey-step-tag">Step 07</span>
+          <div class="journey-card-header">
+            <div class="journey-icon" aria-hidden="true">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <h3>Placement Readiness</h3>
+          </div>
+          <p>Your readiness score tracks growth across resume strength, skill coverage, and interview performance — all in one live dashboard.</p>
+        </div>
+        <div class="journey-node" aria-hidden="true">
+          <span>7</span>
+        </div>
+        <div class="journey-spacer"></div>
+      </div>
+
+      <!-- Step 8 -->
+      <div class="journey-item journey-item--right journey-reveal" role="listitem" tabindex="0">
+        <div class="journey-spacer"></div>
+        <div class="journey-node journey-node--final" aria-hidden="true">
+          <span>8</span>
+        </div>
+        <div class="journey-card journey-card--final">
+          <span class="journey-step-tag">Step 08</span>
+          <div class="journey-card-header">
+            <div class="journey-icon journey-icon--final" aria-hidden="true">
+              <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h3>Successful Placement</h3>
+          </div>
+          <p>Match with verified hiring partners, apply with a single click, and land the role you've been building toward. Your career, launched.</p>
+        </div>
+      </div>
+
+    </div><!-- /.journey-timeline -->
+
+    <!-- End marker -->
+    <div class="journey-end" aria-hidden="true">
+      <i class="fa-solid fa-circle-check"></i>
+      <span>Placement Achieved</span>
+    </div>
+
+  </div>
+</section>
+        <h2>Build an ATS-Friendly Resume in Minutes</h2>
+
+        <p>
+          Create professional resumes tailored for placements and internships.
+          Get structured templates, skill recommendations, and recruiter-friendly formatting.
+        </p>
+
+        <div class="resume-features">
+
+          <div class="resume-feature">
+            <i class="fa-solid fa-check-circle"></i>
+            ATS Optimized Templates
+          </div>
+
+          <div class="resume-feature">
+            <i class="fa-solid fa-check-circle"></i>
+            AI Skill Suggestions
+          </div>
+
+          <div class="resume-feature">
+            <i class="fa-solid fa-check-circle"></i>
+            Instant PDF Download
+          </div>
+
+          <div class="resume-feature">
+            <i class="fa-solid fa-check-circle"></i>
+            Placement Focused Format
+          </div>
+
+        </div>
+
+        <a href="resume-builder.html" class="resume-btn">
+          Build My Resume
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+      </div>
+
+      <div class="resume-right">
+
+        <div class="resume-preview">
+
+          <div class="resume-header"></div>
+
+          <div class="resume-line long"></div>
+          <div class="resume-line medium"></div>
+          <div class="resume-line short"></div>
+
+          <div class="resume-line long"></div>
+          <div class="resume-line medium"></div>
+
+        </div>
+
+      </div>
+    </div>
+
   <div class="hero-right">
   <div class="hero-img-wrapper">
     <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b" alt="students"/>
