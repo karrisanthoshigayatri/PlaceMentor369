@@ -13,11 +13,7 @@ function getToken() {
 /* ==========================================================
    SESSION & DATA
 ========================================================== */
-
-// ✅ FIXED: Replace hardcoded fallback with session data
-const placementorSession = JSON.parse(
-  localStorage.getItem("placementor_session")
-);
+const placementorSession = JSON.parse(localStorage.getItem("placementor_session"));
 
 let studentSession = JSON.parse(localStorage.getItem(USER_KEY)) || {
   name: placementorSession?.user?.name || "Student",
@@ -53,14 +49,11 @@ async function init() {
   const token = getToken();
   if (!token) return alert("Login required");
 
-  // -----------------------------
   // Fetch student profile
-  // -----------------------------
   try {
-    const resProfile = await fetch("http://localhost:5000/api/student/profile", {
-      headers: { "Authorization": `Bearer ${token}` }
+    const resProfile = await fetch(`${API}/profile`, {
+      headers: { Authorization: `Bearer ${token}` }
     });
-
     if (resProfile.ok) {
       const profile = await resProfile.json();
       studentSession = {
@@ -71,7 +64,6 @@ async function init() {
       };
       skills = [...studentSession.skills];
     }
-
     const infoTag = document.getElementById("student-info");
     if (infoTag)
       infoTag.innerText = `${studentSession.branch} | ${studentSession.cgpa} CGPA`;
@@ -79,12 +71,10 @@ async function init() {
     console.error("Failed to fetch profile:", err);
   }
 
-  // -----------------------------
   // Fetch all approved jobs
-  // -----------------------------
   try {
-    const resJobs = await fetch("http://localhost:5000/api/student/jobs", {
-      headers: { "Authorization": `Bearer ${token}` }
+    const resJobs = await fetch(`${API}/jobs`, {
+      headers: { Authorization: `Bearer ${token}` }
     });
     const jobsData = await resJobs.json();
     if (resJobs.ok && jobsData.length > 0) {
@@ -107,14 +97,11 @@ async function init() {
     allAvailableJobs = defaultJobs;
   }
 
-  // -----------------------------
   // Fetch applied jobs
-  // -----------------------------
   try {
-    const resApps = await fetch("http://localhost:5000/api/student/applications", {
-      headers: { "Authorization": `Bearer ${token}` }
+    const resApps = await fetch(`${API}/applications`, {
+      headers: { Authorization: `Bearer ${token}` }
     });
-
     if (resApps.ok) {
       const apps = await resApps.json();
       appliedJobs = apps.map(a => a.job._id);
@@ -128,54 +115,120 @@ async function init() {
   }
 
   renderJobList();
+  setupFilters();
   if (window.lucide) lucide.createIcons();
 }
 
 /* ==========================================================
    RENDER JOB LIST
+   Accepts an optional filtered array; defaults to allAvailableJobs
 ========================================================== */
-function renderJobList() {
+function renderJobList(jobs) {
   const list = document.getElementById("jobs-list");
   if (!list) return;
 
-  const studentCGPA = studentSession.cgpa || 0;
-  const studentBranch = studentSession.branch || "";
+  const jobsToRender = jobs !== undefined ? jobs : allAvailableJobs;
 
-  list.innerHTML = allAvailableJobs
-    .map(job => {
-      const eligibility = checkEligibility(studentSession, job);
-      const isApplied = appliedJobs.includes(job.id);
+  if (jobsToRender.length === 0) {
+    list.innerHTML = `
+      <div class="flex flex-col items-center justify-center py-16 text-slate-400 gap-3">
+        <i data-lucide="search-x" class="w-10 h-10 opacity-30"></i>
+        <p class="text-sm font-medium">No jobs match your search.</p>
+        <button onclick="clearFilters()"
+          class="text-indigo-600 text-xs font-semibold hover:underline mt-1">
+          Clear filters
+        </button>
+      </div>`;
+    if (window.lucide) lucide.createIcons();
+    return;
+  }
 
-      return `
-        <div onclick="selectJob('${job.id}')"
-             id="card-${job.id}"
-             class="job-card bg-white p-5 rounded-xl border border-slate-200 cursor-pointer hover:shadow-md transition-all mb-3">
-            <div class="flex justify-between items-start mb-2">
-                <div>
-                  <h3 class="font-bold text-slate-900">${job.title}</h3>
-                  <p class="text-sm text-slate-500">${job.company}</p>
-                </div>
-                <span class="px-2 py-1 text-[10px] font-bold rounded ${
-                  eligibility.eligible ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                }">
-                    ${eligibility.eligible ? "Eligible ✔" : "Not Eligible ❌"}
-                </span>
-            </div>
-            <div class="flex flex-wrap gap-3 items-center mt-3 text-[10px]">
-                <span class="text-slate-400 uppercase font-medium">Deadline: ${job.deadline}</span>
-                <span class="text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded">Min CGPA: ${job.cgpa}</span>
-                <span class="text-slate-700 bg-slate-100 px-2 py-0.5 rounded">Branches: ${job.branches?.join(", ") || "Any"}</span>
-            </div>
+  list.innerHTML = jobsToRender.map(job => {
+    const eligibility = checkEligibility(studentSession, job);
+    const isApplied = appliedJobs.includes(job.id);
+
+    return `
+      <div onclick="selectJob('${job.id}')"
+           id="card-${job.id}"
+           class="job-card bg-white p-5 rounded-xl border border-slate-200 cursor-pointer hover:shadow-md transition-all mb-3">
+        <div class="flex justify-between items-start mb-2">
+          <div>
+            <h3 class="font-bold text-slate-900">${job.title}</h3>
+            <p class="text-sm text-slate-500">${job.company}</p>
+          </div>
+          <span class="px-2 py-1 text-[10px] font-bold rounded ${
+            eligibility.eligible ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+          }">
+            ${eligibility.eligible ? "Eligible ✔" : "Not Eligible ❌"}
+          </span>
         </div>
-      `;
-    })
-    .join("");
+        <div class="flex flex-wrap gap-3 items-center mt-3 text-[10px]">
+          <span class="text-slate-400 uppercase font-medium">Deadline: ${job.deadline}</span>
+          <span class="text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded">Min CGPA: ${job.cgpa}</span>
+          <span class="text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
+            Branches: ${job.branches?.join(", ") || "Any"}
+          </span>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  if (window.lucide) lucide.createIcons();
+}
+
+/* ==========================================================
+   SEARCH & FILTER LOGIC
+========================================================== */
+function applyFilters() {
+  const query  = (document.getElementById("job-search")?.value || "").trim().toLowerCase();
+  const branch = (document.getElementById("branch-filter")?.value || "").toLowerCase();
+
+  const filtered = allAvailableJobs.filter(job => {
+    const matchesSearch =
+      !query ||
+      job.title.toLowerCase().includes(query) ||
+      job.company.toLowerCase().includes(query);
+
+    const matchesBranch =
+      !branch ||
+      (job.branches || []).some(b => b.toLowerCase() === branch);
+
+    return matchesSearch && matchesBranch;
+  });
+
+  // Update results count label
+  const countEl = document.getElementById("filter-count");
+  if (countEl) {
+    countEl.textContent = (query || branch)
+      ? `${filtered.length} of ${allAvailableJobs.length} jobs`
+      : "";
+  }
+
+  renderJobList(filtered);
+}
+
+window.clearFilters = function () {
+  const searchEl = document.getElementById("job-search");
+  const branchEl = document.getElementById("branch-filter");
+  if (searchEl) searchEl.value = "";
+  if (branchEl) branchEl.value = "";
+
+  const countEl = document.getElementById("filter-count");
+  if (countEl) countEl.textContent = "";
+
+  renderJobList();
+};
+
+function setupFilters() {
+  document.getElementById("job-search")?.addEventListener("input", applyFilters);
+  document.getElementById("branch-filter")?.addEventListener("change", applyFilters);
+  document.getElementById("clear-filters")?.addEventListener("click", clearFilters);
 }
 
 /* ==========================================================
    SELECT JOB DETAIL
 ========================================================== */
-window.selectJob = function(id) {
+window.selectJob = function (id) {
   const job = allAvailableJobs.find(j => j.id === id);
   const detailPane = document.getElementById("job-details");
   const emptyState = document.getElementById("empty-state");
@@ -184,7 +237,6 @@ window.selectJob = function(id) {
   document.querySelectorAll(".job-card").forEach(c =>
     c.classList.remove("border-indigo-500", "bg-indigo-50", "ring-1", "ring-indigo-500")
   );
-
   const selectedCard = document.getElementById(`card-${id}`);
   if (selectedCard)
     selectedCard.classList.add("border-indigo-500", "bg-indigo-50", "ring-1", "ring-indigo-500");
@@ -205,7 +257,7 @@ window.selectJob = function(id) {
     {
       label: eligibility.details.eligibleBranch
         ? "Branch eligible"
-        : `Branch not eligible`,
+        : "Branch not eligible",
       passed: eligibility.details.eligibleBranch
     }
   ];
@@ -216,13 +268,13 @@ window.selectJob = function(id) {
         <div>
           <h1 class="text-4xl font-black text-slate-900 mb-2">${job.title}</h1>
           <p class="text-xl text-indigo-600 font-semibold">${job.company}</p>
-          <p class="text-sm text-slate-500 mt-2">Branch: ${job.branches?.join(", ") || "Any"} • Min CGPA: ${job.cgpa}</p>
+          <p class="text-sm text-slate-500 mt-2">
+            Branch: ${job.branches?.join(", ") || "Any"} • Min CGPA: ${job.cgpa}
+          </p>
         </div>
         <div class="flex flex-col gap-3 w-full md:w-auto">
           <span class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${
-            eligibility.eligible
-              ? "bg-emerald-100 text-emerald-700"
-              : "bg-rose-100 text-rose-700"
+            eligibility.eligible ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
           }">
             ${eligibility.eligible ? "Eligible ✔" : "Not Eligible ❌"}
           </span>
@@ -240,13 +292,14 @@ window.selectJob = function(id) {
           </button>
           <a
             href="../student/skill-gap.html?jobId=${job.id}"
-            class="flex items-center justify-center gap-2 px-10 py-3 rounded-xl font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition-all text-sm">
+            class="flex items-center justify-center gap-2 px-10 py-3 rounded-xl font-semibold
+                   text-indigo-600 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition-all text-sm">
             📊 Skill Gap Analysis
           </a>
           ${!eligibility.eligible && !isApplied ? `
-          <p class="text-sm text-rose-600 bg-rose-50 border border-rose-100 rounded-xl p-3 mt-2">
-            You may not meet all job requirements.
-          </p>
+            <p class="text-sm text-rose-600 bg-rose-50 border border-rose-100 rounded-xl p-3 mt-2">
+              You may not meet all job requirements.
+            </p>
           ` : ""}
         </div>
       </div>
@@ -257,7 +310,8 @@ window.selectJob = function(id) {
           <ul class="space-y-3">
             ${requirementItems.map(item => `
               <li class="flex items-center gap-3 text-sm ${item.passed ? "text-emerald-700" : "text-rose-600"}">
-                <span class="w-6 h-6 flex items-center justify-center rounded-full bg-white border ${item.passed ? "border-emerald-200" : "border-rose-200"}">
+                <span class="w-6 h-6 flex items-center justify-center rounded-full bg-white border
+                  ${item.passed ? "border-emerald-200" : "border-rose-200"}">
                   ${item.passed ? "✔" : "✖"}
                 </span>
                 <span>${item.label}</span>
@@ -267,11 +321,19 @@ window.selectJob = function(id) {
         </div>
         <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
           <p class="text-xs font-bold text-slate-400 uppercase mb-3">Matching Skills</p>
-          <p class="text-sm text-slate-500 mb-3">${job.skills?.length ? `${eligibility.details.matchingSkills.length} of ${eligibility.details.totalSkills} required skills matched` : "No specific skills listed"}.</p>
+          <p class="text-sm text-slate-500 mb-3">
+            ${job.skills?.length
+              ? `${eligibility.details.matchingSkills.length} of ${eligibility.details.totalSkills} required skills matched`
+              : "No specific skills listed"}.
+          </p>
           <div class="flex flex-wrap gap-2">
             ${job.skills.map(skill => {
               const matched = eligibility.details.matchingSkills.includes(normalizeText(skill));
-              return `<span class="px-2 py-1 text-xs rounded-lg border ${matched ? "bg-green-50 border-green-200 text-green-700 font-bold" : "bg-white border-slate-200 text-slate-400"}">${skill}</span>`;
+              return `<span class="px-2 py-1 text-xs rounded-lg border ${
+                matched
+                  ? "bg-green-50 border-green-200 text-green-700 font-bold"
+                  : "bg-white border-slate-200 text-slate-400"
+              }">${skill}</span>`;
             }).join("")}
           </div>
         </div>
@@ -293,21 +355,11 @@ window.selectJob = function(id) {
    HANDLE APPLY
 ========================================================== */
 window.handleApply = async function (jobId) {
-  console.log("🆔 jobId received:", jobId);
-
   const token = getToken();
+  if (!token) { alert("Login required"); return; }
+  if (!jobId)  { alert("Invalid Job ID"); return; }
 
-  if (!token) {
-    alert("Login required");
-    return;
-  }
-
-  if (!jobId) {
-    alert("Invalid Job ID");
-    return;
-  }
-
-  const job = allAvailableJobs.find((j) => j.id === jobId);
+  const job = allAvailableJobs.find(j => j.id === jobId);
   const eligibility = job ? checkEligibility(studentSession, job) : null;
 
   if (job && !eligibility.eligible) {
@@ -325,18 +377,12 @@ window.handleApply = async function (jobId) {
         Authorization: `Bearer ${token}`
       }
     });
-
     const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message || "Apply failed");
-    }
+    if (!res.ok) throw new Error(data.message || "Apply failed");
 
     alert("✅ Applied successfully");
-
     appliedJobs.push(jobId);
     localStorage.setItem(APPLICATION_KEY, JSON.stringify(appliedJobs));
-
   } catch (err) {
     console.error("Apply Error:", err);
     alert(err.message);
